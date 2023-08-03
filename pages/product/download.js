@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Server} from '../../config';
@@ -28,6 +29,59 @@ const Download = ({route, navigate}) => {
       })
       .catch(error => {
         console.error(error);
+      });
+  };
+
+  const UrlImage = image => {
+    checkPermission(image);
+  };
+
+  const checkPermission = async image => {
+    if (Platform.OS === 'ios') {
+      downloadFile();
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Storage Permission Required',
+            message:
+              'Application needs access to your storage to download File',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          // Start downloading
+          downloadFile(image);
+          console.log('Storage Permission Granted.');
+        } else {
+          // If permission denied then show alert
+          Alert.alert('Error', 'Storage Permission Not Granted');
+        }
+      } catch (err) {
+        // To handle permission related exception
+        console.log('++++' + err);
+      }
+    }
+  };
+
+  const downloadFile = image => {
+    let FILE_URL = Server.urlImage + '/garduweb/storage/upload/images/' + image;
+    const {config, fs} = RNFetchBlob;
+    let RootDir = fs.dirs.DownloadDir;
+    let options = {
+      fileCache: true,
+      addAndroidDownloads: {
+        path: RootDir + '/' + title + '.jpg',
+        description: title,
+        notification: true,
+        useDownloadManager: true,
+      },
+    };
+    config(options)
+      .fetch('GET', FILE_URL)
+      .then(res => {
+        console.log('res -> ', JSON.stringify(res));
+        alert('File Downloaded Successfully.');
       });
   };
 
@@ -58,7 +112,7 @@ const Download = ({route, navigate}) => {
             marginLeft: 'auto',
             justifyContent: 'center',
           }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => UrlImage(image)}>
             <View
               style={{
                 backgroundColor: 'blue',
