@@ -15,21 +15,24 @@ import Axios from 'axios';
 const SplashScreen = ({navigation}) => {
   useEffect(() => {
     setTimeout(() => {
-      //checkVersion();
+      checkVersion();
       // navigation.replace('auth');
     }, 3000);
   }, []);
 
   const checkVersion = () => {
     const data = {versi: App.version};
-    const url = Server.urlHost + 'version';
-    Axios.post(url, data)
+    Axios.post(Server.urlHost + 'version', data)
       .then(response => {
         if (response.data.update == 'UPDATE_READY') {
-          navigation.replace('updater', {file: response.data.urlFile});
+          navigation.replace('updater', {
+            file: response.data.urlFile,
+            appName: response.data.appName,
+          });
         } else {
           navigation.replace('auth');
         }
+        console.log(response.data);
       })
       .catch(error => {
         console.error(error);
@@ -63,10 +66,12 @@ const SplashScreen = ({navigation}) => {
     <View style={styles.container}>
       <View style={styles.logoWrapper}>
         <Image
-          source={require('../../components/assets/images/pppoe-monitor.jpg')}></Image>
+          style={{width: '100%', objectFit: 'contain'}}
+          source={require('../../components/assets/images/logo-shopstock.png')}></Image>
       </View>
       <View style={styles.markWrapper}>
-        <Text>zizistudio</Text>
+        <Text style={styles.titleCopyRight}>ZIZISTUDIO</Text>
+        <Text style={styles.version}>{App.version}</Text>
       </View>
     </View>
   );
@@ -86,6 +91,13 @@ const styles = StyleSheet.create({
   },
   markWrapper: {
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: 40,
+  },
+  titleCopyRight: {
+    fontWeight: 'bold',
+  },
+  version: {
+    marginTop: 5,
+    fontSize: 10,
   },
 });

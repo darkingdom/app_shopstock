@@ -8,11 +8,13 @@ import ProductDownload from './product/download';
 import SplashScreen from './login/splashScreen';
 import Auth from './login/auth';
 import Login from './login/';
+import Updater from './login/updater';
 
 //--------- LATIHAN
 import Pagination from './latihan/pagination';
 
 export {
+  Updater,
   Dashboard,
   SplashScreen,
   Auth,

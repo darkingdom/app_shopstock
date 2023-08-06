@@ -22,11 +22,10 @@ const Auth = ({navigation}) => {
 
   const auth = uuid => {
     const data = {uuid};
-    const url = Server.urlHost + 'auth';
-    Axios.post(url, data)
+    Axios.post(Server.urlHost + 'auth', data)
       .then(response => {
         if (response.data.status == 'OK') {
-          //navigation.replace('dashboard', {uuid});
+          navigation.replace('dashboard', {uuid});
         } else {
           navigation.replace('login');
         }

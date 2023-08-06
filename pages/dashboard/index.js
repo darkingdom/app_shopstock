@@ -7,10 +7,30 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import {Server} from '../../config';
+import Axios from 'axios';
 
 const Dashboard = ({route, navigation}) => {
+  const {uuid} = route.params;
+  const [app, setApp] = useState('');
+
+  useEffect(() => {
+    LoadDashboard();
+  }, []);
+
+  const LoadDashboard = () => {
+    const data = {uuid};
+    Axios.post(Server.urlHost + 'dashboard', data)
+      .then(response => {
+        setApp(response.data.appSetting);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View
         style={{
           backgroundColor: '#444',
@@ -48,7 +68,9 @@ const Dashboard = ({route, navigation}) => {
         <View style={styles.itemWrapper}>
           <TouchableOpacity
             style={styles.itemThumbnail}
-            onPress={() => navigation.navigate('listproduct', {categories: 1})}>
+            onPress={() =>
+              navigation.navigate('listproduct', {categories: app.man})
+            }>
             <Image
               source={require('../../components/assets/images/man.jpg')}
               style={{height: 100, width: 100, borderRadius: 5}}
@@ -92,7 +114,7 @@ const Dashboard = ({route, navigation}) => {
           </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

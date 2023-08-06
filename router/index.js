@@ -5,7 +5,7 @@ import * as Route from '../pages';
 const Stack = createNativeStackNavigator();
 const Router = () => {
   return (
-    <Stack.Navigator initialRouteName="login">
+    <Stack.Navigator initialRouteName="splashScreen">
       <Stack.Screen
         name="dashboard"
         options={{headerShown: false}}
@@ -29,16 +29,16 @@ const Router = () => {
       />
 
       {/* ================= START LOGIN ================= */}
-      {/* <Stack.Screen
+      <Stack.Screen
         name="updater"
         options={{headerShown: false}}
         component={Route.Updater}
-      /> */}
-      {/* <Stack.Screen
+      />
+      <Stack.Screen
         name="splashScreen"
         options={{headerShown: false}}
         component={Route.SplashScreen}
-      /> */}
+      />
       <Stack.Screen
         name="auth"
         options={{headerShown: false}}

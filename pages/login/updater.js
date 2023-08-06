@@ -11,9 +11,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 
 const Updater = ({route, navigation}) => {
   const {urlFile} = route.params;
-
-  // const urlFile =
-  //   'http://download.garduweb.com/files/mt4/STMJ-ForexCopy-1.71.rar';
+  const {appName} = route.params;
 
   const checkPermission = async () => {
     if (Platform.OS === 'ios') {
@@ -53,20 +51,12 @@ const Updater = ({route, navigation}) => {
 
     file_ext = '.' + file_ext[0];
 
-    // config: To get response by passing the downloading related options
-    // fs: Root directory path to download
     const {config, fs} = RNFetchBlob;
-    // let RootDir = fs.dirs.PictureDir;
     let RootDir = fs.dirs.DownloadDir;
     let options = {
       fileCache: true,
       addAndroidDownloads: {
-        // path:
-        //   RootDir +
-        //   '/file_' +
-        //   Math.floor(date.getTime() + date.getSeconds() / 2) +
-        //   file_ext,
-        path: RootDir + '/Kasir.RTRW-NET.apk',
+        path: RootDir + '/' + appName,
         description: 'downloading file...',
         notification: true,
         // useDownloadManager works with Android only

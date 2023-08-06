@@ -15,8 +15,8 @@ import {Server} from '../../config';
 import Axios from 'axios';
 
 const Login = ({navigation}) => {
-  const [username, setUsername] = useState('jerinx');
-  const [password, setPassword] = useState('123456');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const submitLogin = () => {
     if (username == '' || password == '') {
@@ -32,15 +32,11 @@ const Login = ({navigation}) => {
     Axios.post(url, data)
       .then(response => {
         if (response.data.status == 'OK') {
-          navigation.replace('dashboard', {username: response.data.username});
-          // storeData(response.data.uuid);
-          // Alert.alert('', response.data.status);
+          // navigation.replace('dashboard', {username: response.data.username});
+          storeData(response.data.uuid);
         } else {
-          // Alert.alert('', response.data.message);
-          // Alert.alert('', 'Login gagal!');
           Alert.alert('', response.data.status);
         }
-        // console.log(response.data);
       })
       .catch(error => {
         console.error(error);
