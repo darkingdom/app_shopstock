@@ -93,6 +93,23 @@ const Produk = ({route, navigation}) => {
     return warna;
   };
 
+  const OrderProductVarian = ({
+    userid,
+    uuid,
+    variasi,
+    idvariasi,
+    stok,
+    jumlah,
+    keterangan,
+  }) => {
+    // if (stok >= jumlah) {
+    //   alert('stok tersedia');
+    // } else {
+    //   alert('stok tidak tersedia');
+    // }
+    Alert.alert('info', jumlah);
+  };
+
   const VarianProduct = ({
     uuidVarian,
     warnaVarian,
@@ -111,41 +128,26 @@ const Produk = ({route, navigation}) => {
             {product.varian_jenis == 1 && jenisVarian}
           </Text>
         </View>
-        <View style={{width: '15%'}}>
+        <View style={{width: '10%'}}>
           <Text>({stokVarian})</Text>
         </View>
-        <View style={{width: '30%'}}>
+        <View style={{width: '25%'}}>
           <Text style={{color: 'red'}}>Rp {FormatNumber(hargaVarian)}</Text>
         </View>
-
-        {/* <View style={{width: '20%'}}>
+        <View style={{width: '20%'}}>
           <TextInput
             onchange={this.Masukkan}
             value={jumlah}
             style={styles.frmVarian}
             keyboardType="number-pad"></TextInput>
-        </View> */}
-
-        <View style={{width: '25%', paddingLeft: 10}}>
-          {stokVarian > 0 ? (
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('order', {
-                  part: 'varian',
-                  userid,
-                  idproduk: product.uniq_id,
-                  idvarian: uuidVarian,
-                })
-              }>
-              <View style={styles.btnOrderVarian}>
-                <Text style={{color: '#FFF', fontSize: 14}}>ORDER</Text>
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <Text style={{textAlign: 'center', fontStyle: 'italic'}}>
-              Habis
-            </Text>
-          )}
+        </View>
+        <View style={{width: '15%', paddingLeft: 10}}>
+          <TouchableOpacity
+            onPress={() => OrderProductVarian({stok: stokVarian, jumlah})}>
+            <View style={styles.btnOrderVarian}>
+              <Text style={{color: '#FFF', fontSize: 14}}>ORDER</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -187,6 +189,14 @@ const Produk = ({route, navigation}) => {
         </View>
       )}
 
+      <View style={styles.descriptionWrap}>
+        <TouchableOpacity
+          style={styles.btnDescription}
+          onPress={() => setModalVisible(true)}>
+          <Text style={{color: '#FFF', paddingVertical: 5}}>Deskripsi</Text>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.detailWrap}>
         <View style={styles.detailItem}>
           <View style={styles.detailHead}>
@@ -211,14 +221,10 @@ const Produk = ({route, navigation}) => {
               <Text>Stok</Text>
             </View>
             <View style={styles.detailContent}>
-              <Text>{product.stok}</Text>
+              <Text>25</Text>
             </View>
           </View>
         )}
-      </View>
-
-      <View style={{paddingHorizontal: 20, paddingVertical: 40}}>
-        <Text>{product.deskripsi_produk}</Text>
       </View>
 
       {product.varian == 1 && (
@@ -227,16 +233,16 @@ const Produk = ({route, navigation}) => {
             <View style={{width: '30%'}}>
               <Text style={styles.varianHeadTitle}>Varian</Text>
             </View>
-            <View style={{width: '15%'}}>
+            <View style={{width: '10%'}}>
               <Text style={styles.varianHeadTitle}>Stok</Text>
             </View>
-            <View style={{width: '30%'}}>
+            <View style={{width: '25%'}}>
               <Text style={styles.varianHeadTitle}>Harga</Text>
             </View>
-            {/* <View style={{width: '20%'}}>
+            <View style={{width: '20%'}}>
               <Text style={styles.varianHeadTitle}>Jumlah</Text>
-            </View> */}
-            <View style={{width: '25%'}}>
+            </View>
+            <View style={{width: '15%'}}>
               <Text></Text>
             </View>
           </View>
@@ -256,7 +262,7 @@ const Produk = ({route, navigation}) => {
         </View>
       )}
 
-      {/* {product.varian != 1 && (
+      {product.varian != 1 && (
         <View style={styles.jumlahWrap}>
           <View>
             <Text style={styles.jumlah}>Jumlah</Text>
@@ -268,14 +274,14 @@ const Produk = ({route, navigation}) => {
               style={styles.frmJumlah}></TextInput>
           </View>
         </View>
-      )} */}
+      )}
 
-      {/* <View style={styles.keteranganWrap}>
+      <View style={styles.keteranganWrap}>
         <Text style={styles.keterangan}>Keterangan</Text>
         <TextInput
           style={styles.frmKeterangan}
           placeholder="Keterangan"></TextInput>
-      </View> */}
+      </View>
 
       <View style={styles.downloadWrap}>
         <TouchableOpacity
@@ -293,15 +299,7 @@ const Produk = ({route, navigation}) => {
 
       {product.varian != 1 && (
         <View style={{paddingHorizontal: 20, marginTop: 10}}>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('order', {
-                part: 'non_varian',
-                userid,
-                idproduk: product.uniq_id,
-                idvarian: '',
-              })
-            }>
+          <TouchableOpacity>
             <View style={styles.btnOrder}>
               <Text style={styles.btnTitle}>ORDER</Text>
             </View>
@@ -312,7 +310,7 @@ const Produk = ({route, navigation}) => {
       <View style={{marginBottom: 50}}></View>
 
       {/* ========================= */}
-      {/* <Modal animationType="slide" transparent={true} visible={modalVisible}>
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.modalContainer}>
           <View style={styles.modalWrap}>
             <ScrollView style={styles.modalContent}>
@@ -327,7 +325,7 @@ const Produk = ({route, navigation}) => {
             </View>
           </View>
         </View>
-      </Modal> */}
+      </Modal>
     </ScrollView>
   );
 };
@@ -351,12 +349,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
   },
-  detailWrap: {
-    marginHorizontal: 20,
-    borderWidth: 1,
-    borderColor: '#CCC',
-    marginTop: 30,
-  },
+  detailWrap: {marginHorizontal: 20, borderWidth: 1, borderColor: '#CCC'},
   detailItem: {flexDirection: 'row'},
   detailHead: {
     width: '50%',

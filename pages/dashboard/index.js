@@ -69,7 +69,10 @@ const Dashboard = ({route, navigation}) => {
           <TouchableOpacity
             style={styles.itemThumbnail}
             onPress={() =>
-              navigation.navigate('listproduct', {categories: app.man})
+              navigation.navigate('listproduct', {
+                userid: uuid,
+                categories: app.man,
+              })
             }>
             <Image
               source={require('../../components/assets/images/man.jpg')}
@@ -81,7 +84,11 @@ const Dashboard = ({route, navigation}) => {
           </View>
         </View>
         <View style={styles.itemWrapper}>
-          <TouchableOpacity style={styles.itemThumbnail}>
+          <TouchableOpacity
+            style={styles.itemThumbnail}
+            onPress={() =>
+              navigation.navigate('listproduct', {categories: app.woman})
+            }>
             <Image
               source={require('../../components/assets/images/woman.jpg')}
               style={{height: 100, width: 100, borderRadius: 5}}

@@ -3,6 +3,7 @@ import Dashboard from './dashboard';
 import ListProduct from './list_product';
 import Product from './product';
 import ProductDownload from './product/download';
+import Order from './order';
 
 //--------- LOGIN
 import SplashScreen from './login/splashScreen';
@@ -23,4 +24,5 @@ export {
   ListProduct,
   Product,
   ProductDownload,
+  Order,
 };

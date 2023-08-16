@@ -10,18 +10,29 @@ import {
 } from 'react-native';
 import React, {useEffect, useState, useCallback} from 'react';
 // import Icon from 'react-native-vector-icons/Ionicons';
-import * as myStyle from '../../components/styles';
+// import * as myStyle from '../../components/styles';
 import {Server} from '../../config';
 import Axios from 'axios';
 
 const ListProduk = ({route, navigation}) => {
+  const {userid} = route.params;
   const {categories} = route.params;
-  const [page, setPage] = useState(0);
   const [total, setTotal] = useState('');
-  const limit = 30;
+  const limit = 2;
   const [produk, setProduk] = useState([]);
-
   const [refreshing, setRefreshing] = useState(false);
+  const [nav, setNav] = useState(true);
+
+  let activePage = 1;
+  let page = route.params.page;
+  if (page > 1) {
+    activePage = page;
+  } else {
+    page = activePage;
+  }
+
+  const totalPage = Math.ceil(total / limit);
+  const offset = (page - 1) * limit;
 
   useEffect(() => {
     LoadDB();
@@ -36,7 +47,7 @@ const ListProduk = ({route, navigation}) => {
   }, []);
 
   const LoadDB = () => {
-    const data = {part: 'index', kategori: categories, page, limit};
+    const data = {part: 'index', kategori: categories, page: offset, limit};
     Axios.post(Server.urlHost + 'listProduct', data)
       .then(response => {
         setTotal(response.data.total);
@@ -47,11 +58,28 @@ const ListProduk = ({route, navigation}) => {
       });
   };
 
+  const TitleCategories = id => {
+    const [titlePage, setTitlePage] = useState('');
+    const data = {part: 'titleCategories', id};
+    Axios.post(Server.urlHost + 'listProduct', data).then(response => {
+      setTitlePage(response.data.categories);
+    });
+    return titlePage.toUpperCase();
+  };
+
   const SearchProduk = q => {
     if (q == '') {
       LoadDB();
+      setNav(true);
     } else {
-      const data = {part: 'search', q, kategori: categories, page, limit};
+      setNav(false);
+      const data = {
+        part: 'search',
+        q,
+        kategori: categories,
+        page: offset,
+        limit,
+      };
       Axios.post(Server.urlHost + 'listProduct', data).then(response => {
         setProduk(response.data.produk);
       });
@@ -77,23 +105,11 @@ const ListProduk = ({route, navigation}) => {
   const ListItem = ({uuid, image, title, varian}) => {
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('product', {uuid: uuid})}
-        style={{
-          flexDirection: 'row',
-          borderBottomColor: '#CCC',
-          borderBottomWidth: 1,
-          paddingBottom: 10,
-          paddingHorizontal: 10,
-          marginBottom: 10,
-        }}>
-        <View
-          style={{
-            height: 80,
-            width: 80,
-            borderRadius: 3,
-          }}>
+        onPress={() => navigation.navigate('product', {userid, uuid: uuid})}
+        style={styles.itemWrap}>
+        <View style={styles.imgWrap}>
           <Image
-            style={{height: 80, width: 80, objectFit: 'contain'}}
+            style={styles.img}
             source={{
               uri:
                 Server.urlImage +
@@ -102,9 +118,9 @@ const ListProduk = ({route, navigation}) => {
             }}
           />
         </View>
-        <View style={{paddingLeft: 10, paddingRight: 80}}>
-          <Text style={{fontSize: 20}}>{title}</Text>
-          <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+        <View style={styles.content}>
+          <Text style={styles.titleContent}>{title}</Text>
+          <Text style={styles.prizeWrap}>
             {PrizeVarian({uniq_id: uuid, varian})}
           </Text>
         </View>
@@ -114,7 +130,7 @@ const ListProduk = ({route, navigation}) => {
 
   return (
     <ScrollView
-      style={{flex: 1, backgroundColor: '#FFF'}}
+      contentContainerStyle={styles.container}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -123,27 +139,17 @@ const ListProduk = ({route, navigation}) => {
           tintColor="orange"
         />
       }>
-      <View
-        style={{
-          backgroundColor: '#444',
-          paddingVertical: 20,
-          alignItems: 'center',
-        }}>
-        <Text style={{color: '#FFF'}}>MAN</Text>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>{TitleCategories(categories)}</Text>
       </View>
-      <View style={{marginTop: 20, paddingHorizontal: 20}}>
+      <View style={styles.searchWrap}>
         <TextInput
           onChangeText={q => SearchProduk(q)}
-          style={{
-            borderColor: '#CCC',
-            borderWidth: 1,
-            paddingHorizontal: 10,
-            borderRadius: 10,
-          }}
+          style={styles.frmSearch}
           placeholder="Cari"></TextInput>
       </View>
 
-      <View style={{paddingHorizontal: 20, paddingTop: 20}}>
+      <View style={styles.mainWrap}>
         <ScrollView style={{marginTop: 10}}>
           {produk.map(data => {
             return (
@@ -158,18 +164,117 @@ const ListProduk = ({route, navigation}) => {
           })}
         </ScrollView>
       </View>
+      {nav == true && (
+        <View style={styles.nav}>
+          <TouchableOpacity
+            disabled={page <= 1}
+            onPress={() =>
+              navigation.replace('listproduct', {
+                categories,
+                page: page - 1,
+              })
+            }>
+            <View style={styles.previousWrap}>
+              <Text style={{textAlign: 'right'}}>Previous</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            disabled={totalPage == page}
+            onPress={() =>
+              navigation.replace('listproduct', {
+                categories,
+                page: page + 1,
+              })
+            }>
+            <View style={styles.nextWrap}>
+              <Text>Next</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )}
     </ScrollView>
   );
 };
 
 export default ListProduk;
 
-const styles = StyleSheet.create({});
-
-{
-  /* <View style={{padding: 50}}>
-        <Text>Total: {total}</Text>
-        <Text>Page: {page}</Text>
-        <Text>Limit: {limit}</Text>
-      </View> */
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFF',
+  },
+  header: {
+    backgroundColor: '#444',
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+  headerTitle: {
+    color: '#FFF',
+  },
+  searchWrap: {
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+  frmSearch: {
+    borderColor: '#CCC',
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+  },
+  mainWrap: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  itemWrap: {
+    flexDirection: 'row',
+    borderBottomColor: '#CCC',
+    borderBottomWidth: 1,
+    paddingBottom: 10,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  img: {
+    height: 80,
+    width: 80,
+    objectFit: 'contain',
+  },
+  imgWrap: {
+    height: 80,
+    width: 80,
+    borderRadius: 3,
+  },
+  content: {
+    paddingLeft: 10,
+    paddingRight: 80,
+  },
+  titleContent: {fontSize: 20},
+  prizeWrap: {fontSize: 18, fontWeight: 'bold'},
+  nav: {
+    backgroundColor: '#CCC',
+    position: 'absolute',
+    bottom: 0,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    width: '100%',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  previousWrap: {
+    paddingHorizontal: 10,
+    backgroundColor: '#FFF',
+    paddingVertical: 5,
+    borderTopStartRadius: 10,
+    borderBottomStartRadius: 10,
+    width: 80,
+  },
+  nextWrap: {
+    paddingHorizontal: 10,
+    backgroundColor: '#FFF',
+    paddingVertical: 5,
+    borderTopEndRadius: 10,
+    borderBottomEndRadius: 10,
+    borderLeftColor: '#CCC',
+    borderLeftWidth: 1,
+    width: 80,
+  },
+});

@@ -27,6 +27,11 @@ const Router = () => {
         options={{headerShown: true, title: 'Download Produk'}}
         component={Route.ProductDownload}
       />
+      <Stack.Screen
+        name="order"
+        options={{headerShown: true, title: 'Pesanan'}}
+        component={Route.Order}
+      />
 
       {/* ================= START LOGIN ================= */}
       <Stack.Screen
