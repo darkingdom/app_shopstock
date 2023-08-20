@@ -4,11 +4,12 @@ import ListProduct from './list_product';
 import Product from './product';
 import ProductDownload from './product/download';
 import Order from './order';
+import Keranjang from './keranjang';
 
 //--------- LOGIN
 import SplashScreen from './login/splashScreen';
 import Auth from './login/auth';
-import Login from './login/';
+import Login from './login';
 import Updater from './login/updater';
 
 //--------- LATIHAN
@@ -25,4 +26,5 @@ export {
   Product,
   ProductDownload,
   Order,
+  Keranjang,
 };

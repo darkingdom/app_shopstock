@@ -109,6 +109,7 @@ const Dashboard = ({route, navigation}) => {
             <Text style={styles.titleItem}>KIDS & BABY</Text>
           </View>
         </View>
+
         <View style={styles.itemWrapper}>
           <TouchableOpacity style={styles.itemThumbnail}>
             <Image
@@ -120,6 +121,24 @@ const Dashboard = ({route, navigation}) => {
             <Text style={styles.titleItem}>BUSANA MUSLIM</Text>
           </View>
         </View>
+        <View style={styles.itemWrapper}>
+          <TouchableOpacity
+            style={styles.itemThumbnail}
+            onPress={() =>
+              navigation.navigate('keranjang', {
+                userid: uuid,
+              })
+            }>
+            <Image
+              source={require('../../components/assets/images/keranjang.jpg')}
+              style={{height: 100, width: 100, borderRadius: 5}}
+            />
+          </TouchableOpacity>
+          <View style={styles.titleItemWrapper}>
+            <Text style={styles.titleItem}>KERANJANG</Text>
+          </View>
+        </View>
+        <View style={styles.itemWrapper}>{/* ===== BLANK ITEM =======*/}</View>
       </View>
     </ScrollView>
   );
@@ -138,13 +157,13 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   itemThumbnail: {
-    backgroundColor: '#000',
+    // backgroundColor: '#000',
     height: 100,
     width: 100,
     borderRadius: 5,
     elevation: 5,
   },
-  titleItemWrapper: {alignItems: 'center'},
+  titleItemWrapper: {alignItems: 'center', paddingTop: 10},
   titleItem: {fontWeight: 'bold', fontSize: 16},
 });
 

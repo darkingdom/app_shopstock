@@ -1,6 +1,6 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import * as Route from '../pages';
+import * as Route from '../pages/init';
 
 const Stack = createNativeStackNavigator();
 const Router = () => {
@@ -31,6 +31,11 @@ const Router = () => {
         name="order"
         options={{headerShown: true, title: 'Pesanan'}}
         component={Route.Order}
+      />
+      <Stack.Screen
+        name="keranjang"
+        options={{headerShown: true, title: 'Keranjang'}}
+        component={Route.Keranjang}
       />
 
       {/* ================= START LOGIN ================= */}

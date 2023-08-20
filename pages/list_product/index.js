@@ -18,7 +18,7 @@ const ListProduk = ({route, navigation}) => {
   const {userid} = route.params;
   const {categories} = route.params;
   const [total, setTotal] = useState('');
-  const limit = 2;
+  const limit = 30;
   const [produk, setProduk] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [nav, setNav] = useState(true);
@@ -129,41 +129,44 @@ const ListProduk = ({route, navigation}) => {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          colors={['orange']}
-          tintColor="orange"
-        />
-      }>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>{TitleCategories(categories)}</Text>
       </View>
-      <View style={styles.searchWrap}>
-        <TextInput
-          onChangeText={q => SearchProduk(q)}
-          style={styles.frmSearch}
-          placeholder="Cari"></TextInput>
-      </View>
 
-      <View style={styles.mainWrap}>
-        <ScrollView style={{marginTop: 10}}>
-          {produk.map(data => {
-            return (
-              <ListItem
-                key={data.id}
-                uuid={data.uuid}
-                title={data.title}
-                image={data.image}
-                varian={data.varian}
-              />
-            );
-          })}
-        </ScrollView>
-      </View>
+      <ScrollView
+        contentContainerStyle={styles.listcontainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['orange']}
+            tintColor="orange"
+          />
+        }>
+        <View style={styles.searchWrap}>
+          <TextInput
+            onChangeText={q => SearchProduk(q)}
+            style={styles.frmSearch}
+            placeholder="Cari"></TextInput>
+        </View>
+
+        <View style={styles.mainWrap}>
+          <ScrollView style={{marginTop: 10}}>
+            {produk.map(data => {
+              return (
+                <ListItem
+                  key={data.id}
+                  uuid={data.uuid}
+                  title={data.title}
+                  image={data.image}
+                  varian={data.varian}
+                />
+              );
+            })}
+          </ScrollView>
+        </View>
+      </ScrollView>
       {nav == true && (
         <View style={styles.nav}>
           <TouchableOpacity
@@ -192,7 +195,7 @@ const ListProduk = ({route, navigation}) => {
           </TouchableOpacity>
         </View>
       )}
-    </ScrollView>
+    </View>
   );
 };
 
@@ -202,7 +205,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
+    paddingBottom: 50,
   },
+  listcontainer: {},
   header: {
     backgroundColor: '#444',
     paddingVertical: 20,

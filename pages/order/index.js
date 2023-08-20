@@ -6,8 +6,10 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import {Server} from '../../config';
 import {FormatNumber} from '../../components/utilities';
@@ -26,8 +28,18 @@ const Order = ({route, navigation}) => {
   const [jumlah, setJumlah] = useState(1);
   const [keterangan, setKeterangan] = useState('');
 
+  const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
     GetProduct();
+  }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+      GetProduct();
+    }, 2000);
   }, []);
 
   const GetProduct = () => {
@@ -112,7 +124,16 @@ const Order = ({route, navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['orange']}
+          tintColor="orange"
+        />
+      }>
       <View
         style={{
           backgroundColor: '#FFF',
@@ -223,7 +244,7 @@ const Order = ({route, navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

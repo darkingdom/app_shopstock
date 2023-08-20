@@ -5,12 +5,11 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  TextInput,
   Dimensions,
   Modal,
-  Alert,
+  RefreshControl,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 // import EvilIcons from 'react-native-vector-icons/EvilIcons';
 // import Icon from 'react-native-vector-icons/Ionicons';
 // import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -31,6 +30,7 @@ const Produk = ({route, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [imgActive, setimgActive] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
 
   onchange = nativeEvent => {
     if (nativeEvent) {
@@ -45,6 +45,14 @@ const Produk = ({route, navigation}) => {
 
   useEffect(() => {
     GetProduct();
+  }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+      GetProduct();
+    }, 2000);
   }, []);
 
   const GetProduct = () => {
@@ -152,7 +160,16 @@ const Produk = ({route, navigation}) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['orange']}
+          tintColor="orange"
+        />
+      }>
       <View style={styles.wrap}>
         <ScrollView
           onScroll={({nativeEvent}) => onchange(nativeEvent)}
@@ -335,7 +352,7 @@ const Produk = ({route, navigation}) => {
 export default Produk;
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#FFF'},
+  container: {backgroundColor: '#FFF'},
   titleWrap: {paddingHorizontal: 20, paddingTop: 10},
   title: {fontSize: 24, fontWeight: 'bold'},
   prizeWrap: {paddingHorizontal: 20, paddingTop: 10},
